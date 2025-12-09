@@ -1,4 +1,3 @@
-import informationRoute from "./info";
 import checkPermissions from "../middleware/checkAuth";
 import adminRoutes from "./admin"
 import settingsRoutes from "./settings"
@@ -22,7 +21,6 @@ export interface IRoute {
 }
 const routes = [
 	...adminRoutes,
-	...informationRoute,
 	...settingsRoutes,
 ]
 const RouteInit = (app: any) => {

@@ -1,0 +1,42 @@
+{
+	"name": "healthweb",
+	"version": "1.0.50",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"dev": "bun run --watch src/index.ts",
+		"build": "bun build src/index.ts --outdir=dist --target bun --external farmhash --sourcemap --minify",
+		"start": "concurrently \"bun run dist/index.js\"",
+		"seed": "bun run src/seeds/index.ts",
+		"db:generate": "drizzle-kit generate",
+		"db:clean": "bun Prod_just_me/temp_db_cleanup.ts cleanup",
+		"db:push": "drizzle-kit push"
+	},
+	"dependencies": {
+		"@elysiajs/cors": "^1.4.0",
+		"@types/bcrypt": "^6.0.0",
+		"@types/cors": "^2.8.19",
+		"@types/heic-convert": "^2.1.0",
+		"@types/joi": "^17.2.3",
+		"@types/jsonwebtoken": "^9.0.10",
+		"@types/sharp": "^0.32.0",
+		"bcrypt": "^6.0.0",
+		"concurrently": "^9.2.1",
+		"cors": "^2.8.5",
+		"crypto": "^1.0.1",
+		"dotenv": "^17.2.2",
+		"drizzle-orm": "^0.44.5",
+		"elysia": "latest",
+		"heic-convert": "^2.1.0",
+		"joi": "^18.0.1",
+		"jsonwebtoken": "^9.0.2",
+		"pg": "^8.16.3",
+		"postgres": "^3.4.7",
+		"sequelize": "^6.37.7",
+		"sharp": "^0.34.4"
+	},
+	"devDependencies": {
+		"bun-types": "latest",
+		"drizzle-kit": "^0.31.5"
+	},
+	"module": "src/index.js"
+}

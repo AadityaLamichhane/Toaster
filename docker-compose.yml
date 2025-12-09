@@ -1,0 +1,48 @@
+services:
+  health-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: health-backend
+    ports:
+      - "9008:9000"
+      - "9009:9001"
+    env_file:
+      - .env  
+    environment:
+      - NODE_ENV=production
+      - TZ=Asia/Kathmandu
+      - POSTGRES_HOST=health-postgres
+      - POSTGRES_PORT=5432
+    volumes:
+      - ./uploads:/app/uploads
+      - ./logs:/app/logs
+    restart: unless-stopped
+    depends_on:
+      - health-postgres
+    networks:
+      - health-network
+  health-postgres:
+    image: postgres:15-alpine
+    container_name: health-postgres
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      TZ: Asia/Kathmandu
+      PGTZ: Asia/Kathmandu
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - health-network
+  
+volumes:
+  postgres_data:
+  uploads:
+
+networks:
+  health-network:
+    driver: bridge

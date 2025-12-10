@@ -1,5 +1,5 @@
 import { permission } from "process";
-import Controller from "../modules/settings/controller";
+import Controller from "./";
 
 const routes = [
 	{

@@ -4,6 +4,7 @@
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"dev": "bun run --watch src/index.ts",
+		"dev:bun":"bun --bun next dev",
 		"build": "bun build src/index.ts --outdir=dist --target bun --external farmhash --sourcemap --minify",
 		"start": "concurrently \"bun run dist/index.js\"",
 		"seed": "bun run src/seeds/index.ts",

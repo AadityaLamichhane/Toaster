@@ -1,9 +1,9 @@
 import { pgTable, index } from "drizzle-orm/pg-core";
 import { attribute, tableName } from "./attribute";
 
-const schema = pgTable(tableName, attribute, (t) => [
+export const members = pgTable(tableName, attribute, (t) => [
 	index('idx_members_email').on(t.email),
-	index('idx_members_club_id').on(t.club_id)
+	// index('idx_members_club_id').on(t.)
 ]);
 
-export default schema;
+export default members;

@@ -9,8 +9,8 @@
 		"start": "concurrently \"bun run dist/index.js\"",
 		"seed": "bun run src/seeds/index.ts",
 		"db:generate": "drizzle-kit generate",
-		"db:clean": "bun Prod_just_me/temp_db_cleanup.ts cleanup",
-		"db:push": "drizzle-kit push"
+		"db:push": "drizzle-kit push",
+		"migrate": "drizzle-kit push"
 	},
 	"dependencies": {
 		"@elysiajs/cors": "^1.4.0",

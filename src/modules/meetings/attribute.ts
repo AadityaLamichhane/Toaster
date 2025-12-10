@@ -1,7 +1,7 @@
 import { text, serial} from "drizzle-orm/pg-core";
 export const tableName = "meetings"
 export const attribute =  {
-	id:serial("id"),
+	id:serial("id").primaryKey(),
 	theme:text("theme"),
 	meetingno:text('meeting_no'),
 	date:text("date"),

@@ -1,6 +1,6 @@
 import { pgTable } from "drizzle-orm/pg-core";
 import { attribute, tableName } from "./attribute";
 
-const schema = pgTable(tableName, attribute);
+export const agendas = pgTable(tableName, attribute);
 
-export default schema;
+export default agendas;

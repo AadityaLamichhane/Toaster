@@ -1,6 +1,8 @@
 import checkPermissions from "../middleware/checkAuth";
-import adminRoutes from "./admin"
-import settingsRoutes from "./settings"
+import agendasRoutes from "../modules/agendas/route"
+import meetingsRoutes from "../modules/meetings/route"
+import membersRoutes from "../modules/members/route"
+import membershipRoutes from "../modules/MemberMeeting/route"
 export interface IAuthRequest extends Request {
 	query: any;
 	params: any;
@@ -20,8 +22,10 @@ export interface IRoute {
 	authorization?: boolean;
 }
 const routes = [
-	...adminRoutes,
-	...settingsRoutes,
+	...agendasRoutes,
+	...meetingsRoutes,
+	...membersRoutes,
+	...membershipRoutes,
 ]
 const RouteInit = (app: any) => {
 	routes?.forEach((route) => {

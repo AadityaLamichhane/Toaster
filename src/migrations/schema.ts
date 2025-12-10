@@ -4,6 +4,6 @@ export * from "../modules/contact_us/model";
 export * from "../modules/info_and_dload/model";
 export * from "../modules/media_centre/model";
 export * from "../modules/training_and_Programs/model";
-export * from "../modules/admin/model"
+export * from "../modules/agendas/model"
 export * from "../modules/our_service/model"
 export * from "../modules/settings/model"

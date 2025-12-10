@@ -12,7 +12,7 @@ import {
 	directive_table
 } from "../modules/act_directives/model";
 import { scheduled_program_table } from "../modules/training_and_Programs/model";
-import { admin_table } from "../modules/admin/model";
+import { admin_table } from "../modules/agendas/model";
 import { eq } from "drizzle-orm";
 export async function seedAboutUs() {
 	console.log("🌱 Seeding About Us data...");

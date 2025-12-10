@@ -5,6 +5,7 @@ import {
 import Model from "./model";
 import Repository from "./repository";
 import Resource from "./resource";
+import AgendaModel from "../agendas/model";
 
 const list = async (params: any) => {
 	try {
@@ -69,8 +70,15 @@ const remove = async (id: number) => {
 			throw new Error("Meeting not found");
 		}
 		
+		// First, delete all associated agendas
+		await AgendaModel.destroyByMeetingId(id);
+		
+		// Then delete the meeting
 		const data: any = await Model.destroy(id);
-		return { message: "Meeting deleted successfully", data };
+		return { 
+			message: "Meeting and associated agendas deleted successfully", 
+			data 
+		};
 	} catch (err: any) {
 		throw new Error(err);
 	}

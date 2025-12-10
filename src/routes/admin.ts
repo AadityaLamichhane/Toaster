@@ -1,5 +1,5 @@
 
-import Controller from "../modules/admin/controller"
+import Controller from "../modules/agendas/controller"
 const routes = [
 	{
 		method: "post",

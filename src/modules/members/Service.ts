@@ -1,11 +1,9 @@
 import {
-	meetingValidationSchema,
-	meetingUpdateValidationSchema,
+	memberValidationSchema,
+	memberUpdateValidationSchema,
 } from "./validators";
 import Model from "./model";
-import Repository from "./repository";
 import Resource from "./resource";
-import AgendaModel from "../agendas/model";
 import SubscriptionModel from "../MemberMeeting/model";
 
 const list = async (params: any) => {
@@ -19,7 +17,7 @@ const list = async (params: any) => {
 
 const create = async (input: any) => {
 	try {
-		const { error }: any = await meetingValidationSchema.validateAsync(input);
+		const { error }: any = await memberValidationSchema.validateAsync(input);
 		if (!!error) {
 			throw new Error(error?.details[0].message);
 		}
@@ -35,7 +33,7 @@ const find = async (id: number) => {
 	try {
 		const data: any = await Model.find({ id });
 		if (!data) {
-			throw new Error("Meeting not found");
+			throw new Error("Member not found");
 		}
 		const response = Resource.toJson(data);
 		return response;
@@ -46,14 +44,14 @@ const find = async (id: number) => {
 
 const update = async (input: any, id: number) => {
 	try {
-		const { error } = await meetingUpdateValidationSchema.validateAsync(input);
+		const { error } = await memberUpdateValidationSchema.validateAsync(input);
 		if (!!error) {
 			throw new Error(error?.details[0].message);
 		}
 		
-		const existingMeeting = await Model.find({ id });
-		if (!existingMeeting) {
-			throw new Error("Meeting not found");
+		const existingMember = await Model.find({ id });
+		if (!existingMember) {
+			throw new Error("Member not found");
 		}
 
 		const data: any = await Model.update(input, id);
@@ -64,29 +62,26 @@ const update = async (input: any, id: number) => {
 	}
 };
 
+// Delete member - removes member and all their subscriptions
 const remove = async (id: number) => {
 	try {
-		const existingMeeting = await Model.find({ id });
-		if (!existingMeeting) {
-			throw new Error("Meeting not found");
+		const existingMember = await Model.find({ id });
+		if (!existingMember) {
+			throw new Error("Member not found");
 		}
 		
-		// First, delete all subscriptions for this meeting
-		await SubscriptionModel.destroyByMeetingId(id);
+		// First, delete all subscriptions for this member
+		await SubscriptionModel.destroyByMemberId(id);
 		
-		// Then delete all associated agendas
-		await AgendaModel.destroyByMeetingId(id);
-		
-		// Finally delete the meeting
+		// Then delete the member
 		const data: any = await Model.destroy(id);
-		return { 
-			message: "Meeting, subscriptions, and agendas deleted successfully", 
-			data 
-		};
+		return { message: "Member and associated subscriptions deleted successfully. Club is unaffected.", data };
 	} catch (err: any) {
 		throw new Error(err);
 	}
 };
+
+// Called when a club is deleted - detaches all members from that club
 
 export default {
 	list,
@@ -95,3 +90,4 @@ export default {
 	update,
 	remove,
 };
+

@@ -1,6 +1,7 @@
 import Joi from "joi";
 
 const meetingValidationSchema = Joi.object({
+	guests: Joi.array().items(Joi.string().email()).optional(),
 	theme: Joi.string().required(),
 	meetingno: Joi.string().required(),
 	date: Joi.string().required(),

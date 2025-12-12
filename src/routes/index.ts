@@ -1,8 +1,12 @@
 import checkPermissions from "../middleware/checkAuth";
+import decodeToken from "../utils/jwtverification";
+import clubRoutes from "../modules/club/route"
 import agendasRoutes from "../modules/agendas/route"
 import meetingsRoutes from "../modules/meetings/route"
 import membersRoutes from "../modules/members/route"
 import membershipRoutes from "../modules/MemberMeeting/route"
+import clubMembershipRoutes from "../modules/clubMembership/route"
+import checkAuthentication from "../middleware/checkAuth";
 export interface IAuthRequest extends Request {
 	query: any;
 	params: any;
@@ -12,7 +16,7 @@ export interface IAuthRequest extends Request {
 		name: string;
 		email: string;
 		type: string;
-	};
+	} | null;
 }
 export interface IRoute {
 	method: "get" | "post" | "put" | "delete" | "patch";
@@ -22,14 +26,16 @@ export interface IRoute {
 	authorization?: boolean;
 }
 const routes = [
+	...clubRoutes,
 	...agendasRoutes,
 	...meetingsRoutes,
 	...membersRoutes,
 	...membershipRoutes,
+	...clubMembershipRoutes,
 ]
 const RouteInit = (app: any) => {
 	routes?.forEach((route) => {
-		const { method, path, controller, permissions } = route as IRoute | any;
+		const { method, path, controller, permissions, authorization } = route as IRoute | any;
 		app[method](
 			`api/${path}`,
 			async ({ body, query, params, set, headers }: any) => {
@@ -44,13 +50,18 @@ const RouteInit = (app: any) => {
 						user: null
 					};
 
-
-					// // Check permissions if required
-					if (permissions && permissions.length > 0) {
-						await checkPermissions(req);
+					// Decode JWT token if authorization is required
+					if (authorization) {
+						const authHeader = headers?.authorization || headers?.Authorization;
+						if (!authHeader) {
+							throw new Error("Authorization header is required");
+						}
+						try {
+							await checkAuthentication(req, permissions);
+						} catch (err: any) {
+							throw new Error("Invalid or expired token");
+						}
 					}
-
-					// Execute controller
 					const data = await controller(req);
 					return {
 						success: true,
@@ -65,12 +76,14 @@ const RouteInit = (app: any) => {
 						name: err.name
 					});
 					// Handle Validation Errors
-					if (err.message?.includes('Input buffer contains unsupported image')) {
+					if (err.message?.includes('Input buffer contains unsupported image') ||
+						err.message?.includes("Invalid")
+					) {
 
 						set.status = 422;
 						return {
 							success: false,
-							error: "Validation Error:Invalid Image passed",
+							error: "Invalid request",
 							message: err.message,
 							//details: err.details || []
 						};
@@ -90,6 +103,7 @@ const RouteInit = (app: any) => {
 					// Handle Authentication Errors
 					if (err.message?.includes('jwt') ||
 						err.message?.includes('Unauthorized') ||
+						err.message?.includes("Authorization") ||
 						err.message?.includes('Authentication')) {
 						set.status = 401;
 						return {

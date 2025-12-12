@@ -7,6 +7,7 @@ class Member {
 		const { page = 1, limit = 10 } = params;
 		const offset = (page - 1) * limit;
 
+
 		const result = await db.select().from(members).limit(limit).offset(offset);
 
 		const countQuery = await db.select({ count: sql<number>`count(*)` }).from(members);
@@ -40,7 +41,6 @@ class Member {
 			const result = await db.select().from(members).where(eq(members.email, email));
 			return result[0] || null;
 		}
-		
 		return null;
 	}
 

@@ -7,6 +7,8 @@ import Repository from "./repository";
 import Resource from "./resource";
 import AgendaModel from "../agendas/model";
 import SubscriptionModel from "../MemberMeeting/model";
+import MemberModel from "../members/model";
+import MemberMeetingModel from "../MemberMeeting/model";
 
 const list = async (params: any) => {
 	try {
@@ -23,7 +25,33 @@ const create = async (input: any) => {
 		if (!!error) {
 			throw new Error(error?.details[0].message);
 		}
-		const data: any = await Model.create(input);
+
+		const { guests, ...meetingData } = input;
+
+		const data: any = await Model.create(meetingData);
+
+		if (guests && guests.length > 0) {
+			const unregistered_guests: string[] = [];
+			await Promise.all(
+				guests.map(async (email: string) => {
+					const member = await MemberModel.find({ email });
+					if (member) {
+						await MemberMeetingModel.create({
+							member_id: member.id,
+							meeting_id: data.id,
+						});
+					} else {
+						unregistered_guests.push(email);
+					}
+				})
+			);
+
+			if (unregistered_guests.length > 0) {
+				await Model.update({ unregistered_guests }, data.id);
+				data.unregistered_guests = unregistered_guests;
+			}
+		}
+
 		const response = Resource.toJson(data);
 		return response;
 	} catch (err: any) {

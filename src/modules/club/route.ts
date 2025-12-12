@@ -2,49 +2,35 @@ import Controller from "./controller";
 
 const routes = [
 	{
-		method: "post",
-		controller: Controller.signup,
-		path: "members/signup",
-		authorization: false,
-	},
-	{
-		method: "post",
-		controller: Controller.login,
-		path: "members/login",
-		authorization: false,
-	},
-	{
 		method: "get",
 		controller: Controller.get,
-		path: "members",
+		path: "club",
 		authorization: true,
 	},
 	{
 		method: "post",
-		controller: Controller.signup,
-		path: "members",
+		controller: Controller.create,
+		path: "club",
 		authorization: true,
 	},
 	{
 		method: "get",
 		controller: Controller.find,
-		path: "members/:id",
+		path: "club/:id",
 		authorization: true,
 	},
 	{
 		method: "patch",
 		controller: Controller.update,
-		path: "members/:id",
+		path: "club/:id",
 		authorization: true,
 	},
 	{
 		method: "delete",
 		controller: Controller.remove,
-		path: "members/:id",
+		path: "club/:id",
 		authorization: true,
 	},
-
 ];
 
 export default routes;
-

@@ -4,6 +4,7 @@ import {
 } from "./validators";
 import Model from "./model";
 import Resource from "./resource";
+import MemberShipModel from "../clubMembership/model"
 import decodeToken from "../../utils/jwtverification";
 
 const list = async (params: any) => {
@@ -11,17 +12,17 @@ const list = async (params: any) => {
 		const data: any = await Model.findAllAndCount(params);
 		return data;
 	} catch (err: any) {
-		throw new Error(err);
+		throw err;
 	}
 };
 
 const create = async (input: any, headers: any) => {
 	try {
+		console.log('input in this file is ');
 		const { error }: any = await clubValidationSchema.validateAsync(input);
 		if (!!error) {
 			throw new Error(error?.details[0].message);
 		}
-
 		// Decode JWT from headers to get user id
 		const authHeader = headers?.authorization || headers?.Authorization;
 		if (!authHeader) {
@@ -33,11 +34,12 @@ const create = async (input: any, headers: any) => {
 			...input,
 			created_by: userId,
 		};
+		console.log(clubData);
 		const data: any = await Model.create(clubData);
 		const response = Resource.toJson(data);
 		return response;
 	} catch (err: any) {
-		throw new Error(err);
+		throw err;
 	}
 };
 const find = async (id: number) => {
@@ -49,7 +51,7 @@ const find = async (id: number) => {
 		const response = Resource.toJson(data);
 		return response;
 	} catch (err: any) {
-		throw new Error(err);
+		throw err;
 	}
 };
 
@@ -69,7 +71,7 @@ const update = async (input: any, id: number) => {
 		const response = Resource.toJson(data);
 		return response;
 	} catch (err: any) {
-		throw new Error(err);
+		throw err;
 	}
 };
 
@@ -86,7 +88,7 @@ const remove = async (id: number) => {
 			data,
 		};
 	} catch (err: any) {
-		throw new Error(err);
+		throw err;
 	}
 };
 

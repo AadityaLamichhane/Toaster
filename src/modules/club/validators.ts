@@ -1,8 +1,10 @@
 import Joi from "joi";
 
 const clubValidationSchema = Joi.object({
+	club_number: Joi.string().optional(),
 	name: Joi.string().required(),
 	area: Joi.string().optional(),
+	district: Joi.string().optional()
 });
 
 const clubUpdateValidationSchema = Joi.object({

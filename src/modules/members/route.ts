@@ -5,25 +5,21 @@ const routes = [
 		method: "post",
 		controller: Controller.signup,
 		path: "members/signup",
-		authorization: false,
 	},
 	{
 		method: "post",
 		controller: Controller.login,
 		path: "members/login",
-		authorization: false,
 	},
 	{
 		method: "get",
 		controller: Controller.get,
 		path: "members",
-		authorization: true,
 	},
 	{
 		method: "post",
 		controller: Controller.signup,
 		path: "members",
-		authorization: true,
 	},
 	{
 		method: "get",

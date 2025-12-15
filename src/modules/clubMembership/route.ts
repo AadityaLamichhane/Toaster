@@ -11,7 +11,7 @@ const routes = [
 		method: "post",
 		controller: Controller.joinClub,
 		path: "clubmembership",
-		authorization: false,
+		authorization: true,
 	},
 	{
 		method: "get",

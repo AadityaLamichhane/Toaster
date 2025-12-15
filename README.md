@@ -1,6 +1,6 @@
-# HealthWeb Backend API
+#  APi for Toaster application 
 
-A comprehensive backend API for health web services built with Elysia framework and Bun runtime.
+A comprehensive backend API for toaster web services built with Elysia framework and Bun runtime.
 
 ## 🚀 Quick Start
 
@@ -79,7 +79,7 @@ bun run seed         # Seed database with sample data
 
 Create a `.env` file with:
 ```env
-DATABASE_URL=postgresql://username:password@localhost:5432/healthweb
+DATABASE_URL=postgresql://username:password@localhost:5432/toaster
 JWT_SECRET=your-secret-key
 PORT=3000
 

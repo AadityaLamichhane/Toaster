@@ -19,9 +19,6 @@ const signup = async (input: any) => {
 		if (!!error) {
 			throw new Error(error?.details[0].message);
 		}
-
-		// Check if user already exists
-		console.log('the user with the infotmation is ')
 		const doesExist = await db
 			.select()
 			.from(member)
@@ -29,16 +26,12 @@ const signup = async (input: any) => {
 		if (doesExist.length > 0 && doesExist != undefined) {
 			throwErrorOnValidation("User already exists");
 		}
-		console.log("User with id is");
-		// Hash password
 		const hashedPassword = await bcrypt.hash(input.password, 10);
 		const memberData = {
 			...input,
 			password: hashedPassword,
 		};
-		console.log("HashedPassword", hashedPassword);
 		const data: any = await Model.create(memberData);
-
 		// Generate JWT token
 		const token = jwt.sign(
 			{
@@ -49,7 +42,6 @@ const signup = async (input: any) => {
 			env.JWT_TOKEN,
 			{ expiresIn: "7d" }
 		);
-
 		const response = Resource.toJson(data);
 		return { ...response, token };
 	} catch (err: any) {

@@ -3,7 +3,9 @@ export interface MeetingColumn {
 	theme: string;
 	meetingno: string;
 	date: string;
+	guests: string[];
 	start_time: string;
+	unregistered_guests: any;
 	createdAt?: Date;
 	updatedAt?: Date;
 }
@@ -16,17 +18,16 @@ class Resource {
 			theme: meeting.theme,
 			meetingno: meeting.meetingno,
 			date: meeting.date,
+			guests: meeting.guests,
+			unregistered_guests: meeting.unregistered_guests,
 			start_time: meeting.start_time,
 			createdAt: meeting.createdAt,
 			updatedAt: meeting.updatedAt,
 		};
-
 		return data;
 	}
-
 	static collection(meetings: MeetingColumn[]) {
 		return meetings.map((meeting) => this.toJson(meeting));
 	}
 }
-
 export default Resource;

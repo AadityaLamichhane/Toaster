@@ -50,6 +50,7 @@ class Meeting {
 			.set(params)
 			.where(eq(meetings.id, id))
 			.returning();
+		console.log(result);
 		return result[0] || null;
 	}
 

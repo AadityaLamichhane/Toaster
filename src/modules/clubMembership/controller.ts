@@ -25,11 +25,18 @@ const getMyclub = async (req: IAuthRequest) => {
 };
 const joinClub = async (req: IAuthRequest) => {
 	try {
-		const { body } = req;
-		const data = await Service.joinClub(body);
-		return data;
+		const { body, user } = req;
+		if (user?.id) {
+			console.log('This is the user id of the user ', user.id);
+			const data = await Service.joinClub(body, user.id);
+			return data;
+		}
+		else {
+			console.log("Sign in with the user ");
+			return;
+		}
 	} catch (err: any) {
-		throw new Error(err);
+		throw err;
 	}
 };
 

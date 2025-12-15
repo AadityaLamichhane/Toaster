@@ -72,8 +72,7 @@ const RouteInit = (app: any) => {
 					console.error('🚨 Route Error:', {
 						path: `api/${path}`,
 						method,
-						message: err.message,
-						name: err.name
+						error: err
 					});
 					// Handle Validation Errors
 					if (err.message?.includes('Input buffer contains unsupported image') ||
@@ -91,6 +90,7 @@ const RouteInit = (app: any) => {
 					}
 					if (err.message?.includes('Validation Error') ||
 						err.message?.includes('Validation failed') ||
+						err.message?.includes("ValidationError") ||
 						err.name === 'ValidationError') {
 						set.status = 422;
 						return {

@@ -12,18 +12,17 @@ const list = async (params: any) => {
 		throw new Error(err);
 	}
 };
-const joinClub = async (input: any) => {
+const joinClub = async (input: any, userId: number) => {
 	try {
 		const { error }: any = await clubMembershipValidationSchema.validateAsync(input);
 		if (!!error) {
 			throw new Error(error?.details[0].message);
 		}
-		// Check if already a member
-		const existing = await Model.findByMemberAndClub(input.member_id, input.club_id);
-		if (existing) {
+		const existing = await Model.findByMemberAndClub(userId, input.club_id);
+		if (existing.id) {
 			throw new Error("Member is already part of this club");
 		}
-		const data: any = await Model.create(input);
+		const data: any = await Model.create(input, userId);
 		const response = Resource.toJson(data);
 		return response;
 	} catch (err: any) {
@@ -56,6 +55,7 @@ const getClubsForMember = async (memberId: number) => {
 const getClubsForMemberWithDetails = async (memberId: number) => {
 	try {
 		const data: any = await Model.findByMemberIdWithDetails(memberId);
+		console.log(`data of the club member is `, data);
 		return data;
 	} catch (err: any) {
 		throw new Error(err);

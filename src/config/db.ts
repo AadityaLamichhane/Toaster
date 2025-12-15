@@ -20,7 +20,12 @@ if (
 }
 const port = POSTGRES_PORT || "5432";
 const connectionString = `postgresql://${POSTGRES_USERNAME}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${port}/${POSTGRES_DB}`;
-const client = postgres(connectionString);
+const client = postgres(connectionString, {
+	debug: (connection, query, parameters, types) => {
+		console.log('QUERY:', query);
+		console.log('PARAMS:', parameters);
+	}
+});
 export const db = drizzle(client);
 
 export const testConnection = async () => {

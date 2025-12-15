@@ -32,13 +32,13 @@ class Member {
 
 	static async find(params: any) {
 		const { id, email } = params;
-		if (!id && !email) return null;
-
+		console.log('Looking for the user with email ', email);
 		if (id) {
 			const result = await db.select().from(members).where(eq(members.id, id));
 			return result[0] || null;
 		} else if (email) {
 			const result = await db.select().from(members).where(eq(members.email, email));
+			console.log("User with given information is ");
 			return result[0] || null;
 		}
 		return null;

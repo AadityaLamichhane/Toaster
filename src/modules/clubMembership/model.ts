@@ -8,7 +8,6 @@ class ClubMembership {
 	static async findAllAndCount(params: any) {
 		const { page = 1, limit = 10, member_id, club_id } = params;
 		const offset = (page - 1) * limit;
-
 		const conditions = [];
 		if (member_id) {
 			console.log("Member trying to searhch the club is ", member_id);
@@ -38,10 +37,10 @@ class ClubMembership {
 		};
 	}
 
-	static async create(params: any) {
+	static async create(params: any, memberId: number) {
 		const result = await db
 			.insert(clubMembership)
-			.values(params)
+			.values({ member_id: memberId, club_id: params.club_id })
 			.returning();
 		return result[0];
 	}
@@ -65,9 +64,8 @@ class ClubMembership {
 				eq(clubMembership.member_id, memberId),
 				eq(clubMembership.club_id, clubId)
 			));
-		return result[0] || null;
+		return result[0] || [];
 	}
-
 	static async findByMemberId(memberId: number) {
 		try {
 			console.log('The data of the member is ', memberId);
@@ -85,25 +83,13 @@ class ClubMembership {
 		try {
 			console.log('Fetching clubs for member:', memberId);
 			const result = await db
-				.select({
-					membershipId: clubMembership.id,
-					memberId: clubMembership.member_id,
-					clubId: clubMembership.club_id,
-					joinedAt: clubMembership.joined_at,
-					updatedAt: clubMembership.updated_at,
-					memberName: members.name,
-					memberEmail: members.email,
-					memberPhone: members.phone,
-					clubName: club.name,
-					clubArea: club.area,
-					clubCreatedBy: club.created_by,
-					clubCreatedDate: club.created_date,
-				})
+				.select()
 				.from(clubMembership)
 				.innerJoin(members, eq(clubMembership.member_id, members.id))
 				.innerJoin(club, eq(clubMembership.club_id, club.id))
 				.where(eq(clubMembership.member_id, memberId));
 			return result;
+			console.log(`This is the rsult :${result}`);
 		} catch (err) {
 			console.error('Error fetching member details with clubs:', err);
 			throw err;
@@ -117,7 +103,6 @@ class ClubMembership {
 			.where(eq(clubMembership.club_id, clubId));
 		return result;
 	}
-
 	static async update(params: any, id: number) {
 		const result: any = await db
 			.update(clubMembership)
@@ -126,7 +111,6 @@ class ClubMembership {
 			.returning();
 		return result[0] || null;
 	}
-
 	static async destroy(id: number) {
 		const result = await db
 			.delete(clubMembership)
@@ -134,7 +118,6 @@ class ClubMembership {
 			.returning();
 		return result;
 	}
-
 	static async destroyByMemberId(memberId: number) {
 		const result = await db
 			.delete(clubMembership)
@@ -142,7 +125,6 @@ class ClubMembership {
 			.returning();
 		return result;
 	}
-
 	static async destroyByClubId(clubId: number) {
 		const result = await db
 			.delete(clubMembership)

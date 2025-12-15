@@ -174,3 +174,87 @@ This section covers endpoints related to user management.
       "message": "PIN changed successfully."
     }
     ```
+
+## API Client Example
+
+Here is an example of an API client to interact with the User API.
+
+```typescript
+import axios from 'axios';
+
+const API_URL = import.meta.env.VITE_API_URL || '/api';
+
+const api = axios.create({
+  baseURL: API_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+/**
+ * Registers a new user.
+ * @param {string} name - The user's name.
+ * @param {string} email - The user's email address.
+ * @param {string} password - The user's password.
+ * @returns {Promise<object>} The response data from the API.
+ */
+export const registerUser = async (name, email, password) => {
+  const response = await api.post('/users', { name, email, password });
+  return response.data;
+};
+
+/**
+ * Logs in a user.
+ * @param {string} email - The user's email address.
+ * @param {string} password - The user's password.
+ * @returns {Promise<object>} The response data from the API.
+ */
+export const loginUser = async (email, password) => {
+  const response = await api.post('/users/login', { email, password });
+  if (response.data.data.token) {
+    localStorage.setItem('token', response.data.data.token);
+  }
+  return response.data;
+};
+
+/**
+ * Retrieves a user's information.
+ * @param {string} userId - The ID of the user to retrieve.
+ * @returns {Promise<object>} The response data from the API.
+ */
+export const getUser = async (userId) => {
+  const response = await api.get(`/users/${userId}`);
+  return response.data;
+};
+
+/**
+ * Updates a user's information.
+ * @param {string} userId - The ID of the user to update.
+ * @param {object} updates - An object containing the user fields to update.
+ * @returns {Promise<object>} The response data from the API.
+ */
+export const updateUser = async (userId, updates) => {
+  const response = await api.patch(`/users/${userId}`, updates);
+  return response.data;
+};
+
+/**
+ * Changes a user's PIN.
+ * @param {string} userId - The ID of the user.
+ * @param {string} oldPin - The user's current PIN.
+ * @param {string} newPin - The user's new PIN.
+ * @returns {Promise<object>} The response data from the API.
+ */
+export const changePin = async (userId, oldPin, newPin) => {
+  const response = await api.patch(`/users/${userId}/pin`, { oldPin, newPin });
+  return response.data;
+};
+```

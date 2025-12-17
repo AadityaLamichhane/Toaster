@@ -1,14 +1,21 @@
 import db from "../../config/db";
 import club from "./schema";
 import member from "../members/schema"
-import { sql, eq } from "drizzle-orm";
+import { sql, eq, and } from "drizzle-orm";
 class Club {
 	static async findAllAndCount(params: any) {
-		const { page = 1, limit = 10, area } = params;
+		const { page = 1, limit = 10, area, created_by } = params;
 		const offset = (page - 1) * limit;
 
-		const whereCondition = area ? eq(club.area, area) : undefined;
+		// Build conditions array - only add conditions that have values
+		const conditions: any[] = [];
+		if (area) conditions.push(eq(club.area, area));
+		if (created_by) conditions.push(eq(club.created_by, created_by));
 
+		// Combine conditions with 'and' if any exist
+		const whereCondition = conditions.length > 0 ? and(...conditions) : undefined;
+
+		// Build the data query with where condition
 		const result = whereCondition
 			? await db
 				.select({ ...club as any, createdBy: member.name })
@@ -24,7 +31,7 @@ class Club {
 				.limit(limit)
 				.offset(offset);
 
-		const countQuery = whereCondition
+		const countResult = whereCondition
 			? await db
 				.select({ count: sql<number>`count(*)` })
 				.from(club)
@@ -33,7 +40,7 @@ class Club {
 				.select({ count: sql<number>`count(*)` })
 				.from(club);
 
-		const [{ count }]: any = countQuery;
+		const [{ count }]: any = countResult;
 		return {
 			items: result,
 			page,

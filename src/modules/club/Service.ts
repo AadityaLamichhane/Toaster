@@ -12,6 +12,7 @@ const list = async (params: any) => {
 		const data: any = await Model.findAllAndCount(params);
 		return data;
 	} catch (err: any) {
+		console.error(err);
 		throw err;
 	}
 };

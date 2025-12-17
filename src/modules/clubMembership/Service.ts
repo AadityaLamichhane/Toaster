@@ -5,7 +5,6 @@ import Model from "./model";
 import Resource from "./resource";
 const list = async (params: any) => {
 	try {
-		console.log("Searching the club");
 		const data: any = await Model.findAllAndCount(params);
 		return data;
 	} catch (err: any) {

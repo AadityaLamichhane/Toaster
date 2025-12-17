@@ -10,25 +10,19 @@ class ClubMembership {
 		const offset = (page - 1) * limit;
 		const conditions = [];
 		if (member_id) {
-			console.log("Member trying to searhch the club is ", member_id);
 			conditions.push(eq(clubMembership.member_id, parseInt(member_id)));
 		}
 		if (club_id) {
 			conditions.push(eq(clubMembership.club_id, parseInt(club_id)));
 		}
-
 		const whereCondition = conditions.length > 0 ? and(...conditions) : undefined;
-
 		const result = whereCondition
 			? await db.select().from(clubMembership).where(whereCondition).limit(limit).offset(offset)
 			: await db.select().from(clubMembership).limit(limit).offset(offset);
-
 		const countQuery = whereCondition
 			? await db.select({ count: sql<number>`count(*)` }).from(clubMembership).where(whereCondition)
 			: await db.select({ count: sql<number>`count(*)` }).from(clubMembership);
-
 		const [{ count }]: any = countQuery;
-
 		return {
 			items: result,
 			page,
@@ -36,7 +30,6 @@ class ClubMembership {
 			totalPages: Math.ceil(count / limit),
 		};
 	}
-
 	static async create(params: any, memberId: number) {
 		const result = await db
 			.insert(clubMembership)
@@ -78,20 +71,25 @@ class ClubMembership {
 			console.error(err);
 		}
 	}
-
 	static async findByMemberIdWithDetails(memberId: number) {
 		try {
-			console.log('Fetching clubs for member:', memberId);
 			const result = await db
-				.select()
+				.select({
+					clun_id: club.id,
+					club_name: club.name,
+					user_name: members.name,
+					user_phone: members.phone,
+					user_introduction: members.introduction,
+					user_email: members.email,
+					clubJoined: clubMembership.joined_at,
+				})
 				.from(clubMembership)
 				.innerJoin(members, eq(clubMembership.member_id, members.id))
 				.innerJoin(club, eq(clubMembership.club_id, club.id))
 				.where(eq(clubMembership.member_id, memberId));
 			return result;
-			console.log(`This is the rsult :${result}`);
 		} catch (err) {
-			console.error('Error fetching member details with clubs:', err);
+			console.error(err);
 			throw err;
 		}
 	}

@@ -28,7 +28,7 @@ const server = new Elysia({
 		console.log(`the post request is ${JSON.stringify(data)}`);
 		return
 	}).use(cors({
-		origin: ["http://localhost:3000", "http://localhost:5173", "http://localhost:9000"],
+		origin: "*",
 		methods: ["GET", "POST", "PUT", "DELETE"],
 		credentials: true,
 	}))

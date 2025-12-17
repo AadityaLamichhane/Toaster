@@ -1,25 +1,13 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-const {
-	POSTGRES_PASSWORD,
-	POSTGRES_USERNAME,
-	POSTGRES_DB,
-	POSTGRES_HOST,
-	POSTGRES_PORT,
-} = process.env;
-
-if (
-	!POSTGRES_PASSWORD ||
-	!POSTGRES_USERNAME ||
-	!POSTGRES_DB ||
-	!POSTGRES_HOST
-) {
-	throw new Error(
-		"Missing PostgreSQL environment variables. Make Sure you have the environment variable set "
-	);
+const { POSTGRES_URL, DATABASE_URL } = process.env;
+if (!POSTGRES_URL && !DATABASE_URL) {
+  throw new Error(
+    "Missing PostgreSQL environment variables. Make Sure you have the environment variable set "
+  );
 }
-const port = POSTGRES_PORT || "5432";
-const connectionString = `postgresql://${POSTGRES_USERNAME}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${port}/${POSTGRES_DB}`;
+const connectionString = `${DATABASE_URL || POSTGRES_URL}`;
+console.log('The runnig connection string is ', connectionString);
 const client = postgres(connectionString, {
 	debug: (connection, query, parameters, types) => {
 		console.log('QUERY:', query);
@@ -27,16 +15,14 @@ const client = postgres(connectionString, {
 	}
 });
 export const db = drizzle(client);
-
 export const testConnection = async () => {
 	try {
 		await client`SELECT 1`;
-		console.log("Server is running in the port no ", port);
+		console.log("✅ Database connected successfully!");
 		return true;
 	} catch (error) {
-		console.log("----------Error:----------\n");
+		console.error("❌ Database connection failed:", error);
 		return false;
 	}
 };
-
 export default db;

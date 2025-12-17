@@ -1,0 +1,51 @@
+previews:
+  - name: toaster-preview
+    path: /
+    port: 9000
+    scaling:
+      minInstances: 1
+      maxInstances: 1
+    envVars:
+      - key: NODE_ENV
+        value: development
+      - fromGroup: toaster-env
+
+services:
+  - type: web
+    name: toaster
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    scaling:
+      minInstances: 1
+      maxInstances: 3
+      targetMemoryPercent: 60
+      targetCPUPercent: 60
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - fromGroup: toaster-env
+    healthCheck:
+      path: /
+      port: 9000
+      initialDelaySeconds: 120
+
+  - type: pserv
+    name: postgres
+    runtime: postgres
+    postgres:
+      version: "15"
+    disk:
+      sizeGB: 10
+
+envVarGroups:
+  - name: toaster-env
+    envVars:
+      - key: DATABASE_URL
+        fromService:
+          type: pserv
+          name: postgres
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: PORT
+        value: 9000

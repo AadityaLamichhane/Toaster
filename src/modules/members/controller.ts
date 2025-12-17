@@ -4,6 +4,7 @@ import Service from "./Service";
 const signup = async (req: IAuthRequest) => {
 	try {
 		const { body } = req;
+		console.log('This is the signup body of the obejct ');
 		const data = await Service.signup(body);
 		return data;
 	} catch (err: any) {

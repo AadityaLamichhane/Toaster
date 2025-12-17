@@ -19,6 +19,7 @@ const signup = async (input: any) => {
 		if (!!error) {
 			throw new Error(error?.details[0].message);
 		}
+		console.log('the value of the token is ', env.JWT_TOKEN);
 		const doesExist = await db
 			.select()
 			.from(member)

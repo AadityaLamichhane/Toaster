@@ -11,7 +11,6 @@ const signup = async (req: IAuthRequest) => {
 		throw new Error(err);
 	}
 };
-
 const login = async (req: IAuthRequest) => {
 	try {
 		const { body } = req;
@@ -21,7 +20,6 @@ const login = async (req: IAuthRequest) => {
 		throw new Error(err);
 	}
 };
-
 const get = async (req: IAuthRequest) => {
 	try {
 		const data = await Service.list(req?.query);
@@ -30,7 +28,6 @@ const get = async (req: IAuthRequest) => {
 		throw new Error(err);
 	}
 };
-
 const create = async (req: IAuthRequest) => {
 	try {
 		const { body } = req;
@@ -40,7 +37,6 @@ const create = async (req: IAuthRequest) => {
 		throw new Error(err);
 	}
 };
-
 const find = async (req: IAuthRequest) => {
 	try {
 		const { params } = req;
@@ -54,7 +50,6 @@ const find = async (req: IAuthRequest) => {
 		throw new Error(err);
 	}
 };
-
 const update = async (req: IAuthRequest) => {
 	try {
 		const { body, params } = req;
@@ -68,7 +63,6 @@ const update = async (req: IAuthRequest) => {
 		throw new Error(err);
 	}
 };
-
 const remove = async (req: IAuthRequest) => {
 	try {
 		const { params } = req;

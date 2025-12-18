@@ -1,8 +1,8 @@
 import type { IAuthRequest } from "../../routes";
 import Service from "./service";
-
 const get = async (req: IAuthRequest) => {
 	try {
+		console.log("Getting the meeting of the member ");
 		const data = await Service.list(req?.query);
 		return data;
 	} catch (err: any) {

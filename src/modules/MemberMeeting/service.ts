@@ -10,20 +10,17 @@ const list = async (params: any) => {
 		throw new Error(err);
 	}
 };
-
 const membership = async (input: any) => {
 	try {
 		const { error }: any = await memberShipValidation.validateAsync(input);
 		if (!!error) {
 			throw new Error(error?.details[0].message);
 		}
-
 		// Check if already subscribed
 		const existing = await Model.findByMemberAndMeeting(input.member_id, input.meeting_id);
 		if (existing) {
 			throw new Error("Member is already subscribed to this meeting");
 		}
-
 		const data: any = await Model.create(input);
 		const response = Resource.toJson(data);
 		return response;
@@ -69,7 +66,7 @@ const remove_membership = async (id: number) => {
 		if (!existingSubscription) {
 			throw new Error("Subscription not found");
 		}
-		
+
 		const data: any = await Model.destroy(id);
 		return { message: "Remove membership successfully", data };
 	} catch (err: any) {
@@ -81,10 +78,10 @@ const remove_membership = async (id: number) => {
 const removeByMemberId = async (memberId: number) => {
 	try {
 		const data: any = await Model.destroyByMemberId(memberId);
-		return { 
-			message: "All subscriptions removed for deleted member", 
+		return {
+			message: "All subscriptions removed for deleted member",
 			removed_count: data.length,
-			data 
+			data
 		};
 	} catch (err: any) {
 		throw new Error(err);
@@ -95,10 +92,10 @@ const removeByMemberId = async (memberId: number) => {
 const removeByMeetingId = async (meetingId: number) => {
 	try {
 		const data: any = await Model.destroyByMeetingId(meetingId);
-		return { 
-			message: "All subscriptions removed for deleted meeting", 
+		return {
+			message: "All subscriptions removed for deleted meeting",
 			removed_count: data.length,
-			data 
+			data
 		};
 	} catch (err: any) {
 		throw new Error(err);

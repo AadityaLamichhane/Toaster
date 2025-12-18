@@ -1,7 +1,5 @@
 import { integer, serial, timestamp } from "drizzle-orm/pg-core";
-
 export const tableName = "membermeeting"
-
 export const attribute = {
 	id: serial("id").primaryKey(),
 	member_id: integer("member_id").notNull().references(() => require('../members/schema').default.id, { onDelete: 'cascade' }),

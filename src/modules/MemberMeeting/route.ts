@@ -1,40 +1,21 @@
-import Controller from "./controller";
-
+import Controller from "./controller"
 const routes = [
 	{
 		method: "get",
 		controller: Controller.get,
-		path: "membership",
+		path: "member/meeting",
 		authorization: true,
 	},
 	{
 		method: "post",
 		controller: Controller.subscribe,
-		path: "membership",
+		path: "member/meeting",
 		authorization: true,
 	},
 	{
 		method: "get",
 		controller: Controller.find,
-		path: "membership/:id",
-		authorization: true,
-	},
-	{
-		method: "get",
-		controller: Controller.getByMember,
-		path: "membership/member/:memberId",
-		authorization: true,
-	},
-	{
-		method: "get",
-		controller: Controller.getByMeeting,
-		path: "membership/meeting/:meetingId",
-		authorization: true,
-	},
-	{
-		method: "delete",
-		controller: Controller.unsubscribe,
-		path: "membership/:id",
+		path: "member/meeting/:id",
 		authorization: true,
 	},
 ];

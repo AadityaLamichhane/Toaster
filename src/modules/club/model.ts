@@ -6,15 +6,12 @@ class Club {
 	static async findAllAndCount(params: any) {
 		const { page = 1, limit = 10, area, created_by } = params;
 		const offset = (page - 1) * limit;
-
 		// Build conditions array - only add conditions that have values
 		const conditions: any[] = [];
 		if (area) conditions.push(eq(club.area, area));
 		if (created_by) conditions.push(eq(club.created_by, created_by));
-
 		// Combine conditions with 'and' if any exist
 		const whereCondition = conditions.length > 0 ? and(...conditions) : undefined;
-
 		// Build the data query with where condition
 		const result = whereCondition
 			? await db
